@@ -29,7 +29,7 @@ pipeline {
                             docker rm -f ${IMAGE_NAME}
                         fi
                     """
-                    sh "docker run -d -p 8080:80 --name ${IMAGE_NAME} ${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker run -d -p 8085:80 --name ${IMAGE_NAME} ${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
         }
@@ -37,7 +37,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ Docker image built and container started at http://<your-jenkins-host>:8080"
+            echo "✅ Docker image built and container started at http://<your-jenkins-host>:8085"
         }
         failure {
             echo "❌ Pipeline failed!"
