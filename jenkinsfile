@@ -4,7 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME      = "candyspark-app"
         IMAGE_TAG       = "new"
-        DOCKERHUB_USER  = "vishnubalagani"
+        DOCKERHUB_USER  = "aravind12347"
         DOCKERHUB_IMAGE = "${DOCKERHUB_USER}/${IMAGE_NAME}"
     }
 
