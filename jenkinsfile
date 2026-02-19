@@ -2,10 +2,9 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME      = "candyspark-app"
-        IMAGE_TAG       = "new"
-        DOCKERHUB_USER  = "aravind12347"
-        DOCKERHUB_IMAGE = "${DOCKERHUB_USER}/${IMAGE_NAME}"
+        IMAGE_NAME = "candyspark-app"
+        IMAGE_TAG  = "new"
+        FULL_IMAGE = "${IMAGE_NAME}:${IMAGE_TAG}"
     }
 
     stages {
@@ -19,28 +18,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "docker build -t ${DOCKERHUB_IMAGE}:${IMAGE_TAG} ."
+                    sh "docker build -t ${FULL_IMAGE} ."
                 }
-            }
-        }
-
-        stage('Login to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-                    sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                    '''
-                }
-            }
-        }
-
-        stage('Push Image to Docker Hub') {
-            steps {
-                sh "docker push ${DOCKERHUB_IMAGE}:${IMAGE_TAG}"
             }
         }
 
@@ -52,7 +31,7 @@ pipeline {
                             docker rm -f candyspark-app
                         fi
                     '''
-                    sh "docker run -d -p 8085:80 --name candyspark-app ${DOCKERHUB_IMAGE}:${IMAGE_TAG}"
+                    sh "docker run -d -p 8085:80 --name candyspark-app ${FULL_IMAGE}"
                 }
             }
         }
@@ -60,7 +39,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ Image pushed to Docker Hub and app running at http://<jenkins-host>:8085"
+            echo "✅ App is running at http://<EC2-Public-IP>:8085"
         }
         failure {
             echo "❌ Pipeline failed!"
