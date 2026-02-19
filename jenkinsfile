@@ -7,6 +7,7 @@ pipeline {
         FULL_IMAGE = "${IMAGE_NAME}:${IMAGE_TAG}"
     }
 
+
     stages {
 
         stage('Checkout Code') {
